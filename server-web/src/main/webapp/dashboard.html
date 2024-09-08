@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Domini - RicorsivaMente Domains</title>
+    <link rel="stylesheet" href="styleDashboard.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- User ID Display -->
+        <div id="userIdDisplay" style="position: absolute; top: 10px; left: 10px; font-size: 18px; color: #333;"></div>
+
+        <!-- Titolo della pagina -->
+        <h2>Gestione dei tuoi Domini</h2>
+
+        <!-- Timer -->
+        <div id="countdownTimer" class="timer" style="display: none;">
+            <span id="minutes">02</span>:<span id="seconds">00</span>
+        </div>
+
+        <!-- Barra di navigazione dei tab -->
+        <div class="tabs">
+            <!-- Bottoni per cambiare tab -->
+            <button class="tablink" onclick="openTab(event, 'domini')">Domini Registrati</button>
+            <button class="tablink" onclick="openTab(event, 'ordini')">Ordini</button>
+            <button class="tablink" onclick="openTab(event, 'acquista')">Acquista Dominio</button>
+        </div>
+
+        <!-- Tab: Domini Registrati -->
+        <div id="domini" class="tabcontent">
+            <h3>Domini Registrati</h3>
+            <div class="table-container">
+                <div class="scrollable">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dominio</th>
+                                <th>Data di Registrazione</th>
+                                <th>Data di Scadenza</th>
+                                <th>Azione</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dominiTableBody">
+                            <!-- I dati dei domini verranno caricati qui dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Ordini -->
+        <div id="ordini" class="tabcontent">
+            <h3>Ordini</h3>
+            <div class="table-container">
+                <div class="scrollable">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dominio</th>
+                                <th>Data Ordine</th>
+                                <th>Oggetto</th>
+                                <th>Quota Pagata</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordiniTableBody">
+                            <!-- I dati degli ordini verranno caricati qui dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Acquista Dominio -->
+        <div id="acquista" class="tabcontent">
+            <div id="acquistaFormContainer" class="full-width">
+                <div class="form-title">
+                    <h3 id="acquistaTitle">Acquista Dominio</h3>
+                </div>
+                <form id="purchaseForm" onsubmit="purchaseDominio(event)">
+                    <div class="inline-boxes">
+                        <div class="big-width">
+                            <label for="nomeDominio" class="inline-label">Nome del Dominio:</label>
+                            <input type="text" id="nomeDominio" name="nomeDominio" class="full-width" required>
+                        </div>
+
+                        <div class="small-width">
+                            <label for="tld" class="inline-label">TLD:</label>
+                            <select id="tld" name="tld" class="full-width" required>
+                                <option value=".com">.com</option>
+                                <option value=".net">.net</option>
+                                <option value=".org">.org</option>
+                                <option value=".info">.info</option>
+                                <option value=".biz">.biz</option>
+                                <option value=".us">.us</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label for="durata" class="inline-label">Durata (anni):</label>
+                    <input type="number" id="durata" name="durata" min="1" max="10" class="full-width" required>
+
+                    <!-- Prezzo -->
+                    <div class="price-box">
+                        <label for="prezzo">Prezzo:</label>
+                        <div id="prezzo" class="price-display"><span class="euro-symbol">€</span><span
+                                class="price-value">0</span></div>
+                    </div>
+
+                    <input type="submit" value="Acquista" class="submit-button" onclick="purchaseDominio(event)">
+                </form>
+            </div>
+        </div>
+
+        <!-- Tab: Metodo di Pagamento -->
+        <div id="payment-section" class="tabcontent">
+            <div class="full-width">
+                <div class="form-title">
+                    <h3>Metodo di Pagamento</h3>
+                </div>
+                <form id="paymentForm">
+                    <div class="inline-boxes">
+                        <div class="big-width">
+                            <label for="nomeCarta" class="inline-label">Nome Intestatario Carta:</label>
+                            <input type="text" id="nomeCarta" name="nomeCarta" class="full-width" required>
+                        </div>
+
+                        <div class="big-width">
+                            <label for="cognomeCarta" class="inline-label">Cognome Intestatario Carta:</label>
+                            <input type="text" id="cognomeCarta" name="cognomeCarta" class="full-width" required>
+                        </div>
+                    </div>
+
+                    <label for="numeroCarta" class="inline-label">Numero Carta:</label>
+                    <input type="text" id="numeroCarta" name="numeroCarta" maxlength="19"
+                        placeholder="XXXX XXXX XXXX XXXX" class="full-width" required>
+
+                    <div class="inline-boxes">
+                        <div class="big-width">
+                            <label for="scadenzaCarta" class="inline-label">Data di Scadenza Carta:</label>
+                            <input type="month" id="scadenzaCarta" name="scadenzaCarta" class="full-width" required>
+                        </div>
+
+                        <div class="small-width">
+                            <label for="cvv" class="inline-label">CVV:</label>
+                            <input type="text" id="cvv" name="cvv" maxlength="3" placeholder="XXX" class="full-width"
+                                required>
+                        </div>
+                    </div>
+
+                    <!-- Prezzo -->
+                    <div class="price-box">
+                        <label for="prezzo">Prezzo:</label>
+                        <div id="prezzoPagamento" class="price-display"><span class="euro-symbol">€</span><span
+                                class="price-value">0</span></div>
+                    </div>
+
+                    <input type="submit" value="Acquista" class="submit-button"
+                        onclick="completePurchaseDominio(event)">
+                </form>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal" <p>Vuoi continuare?</p>
+                <button id="confirmBtn">Conferma</button>
+                <button id="cancelBtn">Annulla</button>
+            </div>
+        </div>
+
+        <!-- Tab: Rinnovo Dominio -->
+        <div id="rinnovoDominio" class="tabcontent">
+            <h3>Rinnovo Dominio</h3>
+            <form id="rinnovoForm" onsubmit="rinnovaOrdine(); return false;">
+                <label for="dominioRinnovo">Dominio da rinnovare:</label>
+                <input type="text" id="dominioRinnovo" name="dominioRinnovo" readonly>
+
+                <label for="durataRinnovo">Durata (anni):</label>
+                <input type="number" id="durataRinnovo" name="durataRinnovo" min="1" required
+                    onchange="updateRinnovoPrice()">
+
+                <!-- Prezzo -->
+                <div class="price-box">
+                    <label for="prezzoRinnovo">Prezzo:</label>
+                    <div id="prezzoRinnovo" class="price-display"><span class="euro-symbol">€</span><span
+                            class="price-value">10</span></div>
+                </div>
+
+                <!-- Sezione di pagamento aggiunta -->
+                <div class="form-title">
+                    <h3>Metodo di Pagamento</h3>
+                </div>
+                <div class="inline-boxes">
+                    <div class="big-width">
+                        <label for="nomeCartaRinnovo" class="inline-label">Nome Intestatario Carta:</label>
+                        <input type="text" id="nomeCartaRinnovo" name="nomeCartaRinnovo" class="full-width" required>
+                    </div>
+
+                    <div class="big-width">
+                        <label for="cognomeCartaRinnovo" class="inline-label">Cognome Intestatario Carta:</label>
+                        <input type="text" id="cognomeCartaRinnovo" name="cognomeCartaRinnovo" class="full-width"
+                            required>
+                    </div>
+                </div>
+
+                <label for="numeroCartaRinnovo" class="inline-label">Numero Carta:</label>
+                <input type="text" id="numeroCartaRinnovo" name="numeroCartaRinnovo" maxlength="19"
+                    placeholder="XXXX XXXX XXXX XXXX" class="full-width" required>
+
+                <div class="inline-boxes">
+                    <div class="big-width">
+                        <label for="scadenzaCartaRinnovo" class="inline-label">Data di Scadenza Carta:</label>
+                        <input type="month" id="scadenzaCartaRinnovo" name="scadenzaCartaRinnovo" class="full-width"
+                            required>
+                    </div>
+
+                    <div class="small-width">
+                        <label for="cvvRinnovo" class="inline-label">CVV:</label>
+                        <input type="text" id="cvvRinnovo" name="cvvRinnovo" maxlength="3" placeholder="XXX"
+                            class="full-width" required>
+                    </div>
+                </div>
+
+                <input type="submit" value="Rinnova">
+            </form>
+        </div>
+
+    </div>
+
+    <script src="metodiDashboard.js"></script>
+</body>
+
+</html>

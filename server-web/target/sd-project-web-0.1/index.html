@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrazione e Accesso - RicorsivaMente Domains</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Benvenuto a RicorsivaMente Domains</h2>
+        
+        <div class="tabs">
+            <button class="tablink active" onclick="openTab(event, 'login')">Accedi</button>
+            <button class="tablink" onclick="openTab(event, 'register')">Registrati</button>
+            <button class="tablink" onclick="openTab(event, 'registeredDomains')">Domini</button>
+        </div>
+
+        <div id="login" class="tabcontent" style="display: block;">
+            <h3>Accedi</h3>
+            <form id="loginForm">
+                <label for="loginUserId">ID Utente:</label>
+                <input type="text" id="loginUserId" name="userId" required>
+                <input type="submit" value="Accedi">
+            </form>
+        </div>
+
+        <div id="register" class="tabcontent">
+            <h3>Registrati</h3>
+            <form id="registrationForm">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" required>
+                <label for="cognome">Cognome:</label>
+                <input type="text" id="cognome" name="cognome" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                <input type="submit" value="Registrati">
+            </form>
+        </div>
+
+        <div id="registeredDomains" class="tabcontent">
+            <h3>Domini Registrati</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dominio</th>
+                        <th>Data di Registrazione</th>
+                        <th>Data di Scadenza</th>
+                    </tr>
+                </thead>
+                <tbody id="registeredDomainsTableBody">
+                    <!-- Qui verranno inseriti dinamicamente i domini registrati -->
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            if (evt) evt.currentTarget.className += " active";
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const userId = document.getElementById('loginUserId').value;
+            const response = await fetch(`api/users/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                alert('Accesso effettuato con successo!');
+                localStorage.setItem('userId', userId); // Store user ID in localStorage s
+                window.location.href = 'dashboard.html';
+            } else {
+                const errorData = await response.json();
+                alert(`Errore: ${errorData.message}`);
+            }
+        }
+
+        
+
+        async function handleRegistration(event) {
+            event.preventDefault();
+            const nome = document.getElementById('nome').value;
+            const cognome = document.getElementById('cognome').value;
+            const email = document.getElementById('email').value;
+
+            const response = await fetch('/api/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ nome, cognome, email })
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                alert('Registrazione avvenuta con successo! \n Il tuo id è: ${responseData.id}');
+                window.location.href = 'dashboard.html';
+            } else {
+                const errorData = await response.json();
+                alert(`Errore: ${errorData.message}`);
+            }
+        }
+
+        
+        async function loadRegisteredDomains() {
+    try {
+        const userId = localStorage.getItem('userId');
+        const response = await fetch(`/api/domains`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const domains = await response.json();
+            const registeredDomainsTableBody = document.getElementById('registeredDomainsTableBody');
+            registeredDomainsTableBody.innerHTML = ''; // Pulisci il contenuto esistente
+
+            domains.forEach(domain => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${domain.name}</td>
+                    <td>${new Date(domain.registrationDate).toLocaleDateString()}</td>
+                    <td>${new Date(domain.expiryDate).toLocaleDateString()}</td>
+                `;
+                registeredDomainsTableBody.appendChild(row);
+            });
+        } else {
+            const errorData = await response.json();
+            alert(`Errore: ${errorData.message}`);
+        }
+    } catch (error) {
+        console.error('Errore nel caricamento dei domini registrati:', error);
+        alert('Errore di connessione al server.');
+    }
+}
+        
+        document.addEventListener('DOMContentLoaded', function() {
+                openTab(null, 'login');
+
+        });
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
+        document.getElementById('registrationForm').addEventListener('submit', handleRegistration);
+        
+    </script>
+</body>
+</html>

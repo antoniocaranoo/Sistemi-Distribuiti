@@ -1,0 +1,411 @@
+/* Stile base per l'input di tipo month */
+input[type="month"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Regolazione dello stile per compatibilità con il resto della form */
+.tabcontent input[type="text"],
+.tabcontent input[type="email"],
+.tabcontent input[type="number"],
+.tabcontent input[type="date"],
+.tabcontent input[type="month"],
+/* Aggiunto input month */
+.tabcontent select {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Global Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding-top: 150px;
+    /* Spazio per il titolo e i tab fissi */
+}
+
+/* Container */
+.container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 1000px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+/* Header */
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.form-title {
+    display: flex;
+    justify-content: center;
+    /* Centro il titolo */
+    margin-bottom: 20px;
+}
+
+.form-title h3 {
+    flex: 1;
+    text-align: center;
+    position: relative;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.tablink {
+    background-color: #e7e7e7;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 30%;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.tablink.active {
+    background-color: #5cb85c;
+    color: white;
+}
+
+.tablink:hover {
+    background-color: #ccc;
+    color: black;
+}
+
+/* Tab Content */
+.tabcontent {
+    display: none;
+    margin-top: 20px;
+}
+
+.tabcontent h3 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.tabcontent .form-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.tabcontent form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.tabcontent label {
+    color: #333;
+    font-size: 16px;
+    /* Ingrandito per soddisfare le specifiche */
+    align-self: flex-start;
+    width: 100%;
+    text-align: left;
+    /* Allineamento a sinistra */
+}
+
+.tabcontent input[type="submit"],
+.submit-button {
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+    align-self: center;
+    /* Center the button */
+    width: 150px;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    /* Aggiunto margine superiore */
+}
+
+/* Inline Boxes for Payment Method */
+.inline-boxes {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 15px;
+}
+
+.double-width {
+    width: 66%;
+}
+
+.quarter-width {
+    width: 30%;
+}
+
+.inline-label {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 5px;
+    /* Aggiunge un po' di spazio tra l'etichetta e il campo di input */
+}
+
+.inline-boxes .half-width {
+    display: flex;
+    flex-direction: column;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.small-width {
+    width: 26%;
+}
+
+.big-width {
+    width: 70%;
+}
+
+/* Price Box */
+.price-box {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* Allineamento a sinistra */
+    margin-top: 20px;
+    width: 100%;
+}
+
+.price-box label {
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.price-display {
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 1000px;
+}
+
+.price-display .euro-symbol {
+    margin-right: 5px;
+}
+
+/* Split Containers */
+.split {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+/* Clear floats after the columns */
+.container:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th,
+td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+td button {
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+td button:hover {
+    background-color: #4cae4c;
+}
+
+/* Table Scroll */
+.table-wrapper {
+    max-height: 300px;
+    /* Altezza massima della tabella */
+    overflow-y: auto;
+    /* Abilita lo scrolling verticale */
+}
+
+/* COUNTDOWN */
+.timer {
+    font-size: 24px;
+    font-weight: bold;
+    color: #a31717;
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-bottom: 20px;
+    display: none;
+    /* Nascondi il timer inizialmente */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .tablink {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .tabcontent form {
+        width: 100%;
+    }
+
+    .tabcontent input[type="submit"],
+    .submit-button {
+        width: 100%;
+    }
+
+    .split {
+        width: 100%;
+    }
+
+    .left,
+    .right {
+        float: none;
+    }
+
+    .right {
+        margin-top: 0;
+        /* Rimuovi il margine superiore per schermi piccoli */
+    }
+}
+
+/* Container per la tabella scrollable */
+.scrollable {
+    max-height: 300px;
+    /* Altezza massima per attivare lo scorrimento verticale */
+    overflow-y: auto;
+    /* Scorrimento verticale */
+}
+
+/* Stili per la scrollbar */
+.scrollable::-webkit-scrollbar {
+    width: 12px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 6px;
+}
+
+.scrollable::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Stili per il background scuro */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+}
+
+/* Stili per la finestra modale */
+.modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Stili per i pulsanti */
+.modal button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal button:hover {
+    background-color: #0056b3;
+}
+
+/* Per rendere visibile la modale */
+.modal-overlay.show {
+    visibility: visible;
+}

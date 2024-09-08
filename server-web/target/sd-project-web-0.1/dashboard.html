@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Domini - RicorsivaMente Domains</title>
+    <link rel="stylesheet" href="styleDashboard.css">
+</head>
+<body>
+    <div class="container">
+        <!-- User ID Display -->
+        <div id="userIdDisplay" style="position: absolute; top: 10px; left: 10px; font-size: 18px; color: #333;"></div>
+        
+        <!-- Titolo della pagina -->
+        <h2>Gestione dei tuoi Domini</h2>
+
+        <!-- Barra di navigazione dei tab -->
+        <div class="tabs">
+            <!-- Bottoni per cambiare tab -->
+            <button class="tablink" onclick="openTab(event, 'domini')">Domini Registrati</button>
+            <button class="tablink" onclick="openTab(event, 'ordini')">Ordini</button>
+            <button class="tablink" onclick="openTab(event, 'acquista')">Acquista Dominio</button>
+        </div>
+
+        <!-- Tab: Domini Registrati -->
+        <div id="domini" class="tabcontent">
+            <h3>Domini Registrati</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dominio</th>
+                        <th>Data di Registrazione</th>
+                        <th>Data di Scadenza</th>
+                        <th>Azione</th>
+                    </tr>
+                </thead>
+                <tbody id="dominiTableBody">
+                    <!-- I dati dei domini verranno caricati qui dinamicamente -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tab: Ordini -->
+        <div id="ordini" class="tabcontent">
+            <h3>Ordini</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dominio</th>
+                        <th>Data Ordine</th>
+                        <th>Oggetto</th>
+                        <th>Quota Pagata</th>
+                    </tr>
+                </thead>
+                <tbody id="ordiniTableBody">
+                    <!-- I dati degli ordini verranno caricati qui dinamicamente -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tab: Acquista Dominio -->
+        <div id="acquista" class="tabcontent">
+            <h3>Acquista Dominio</h3>
+            <form id="purchaseForm">
+                <label for="dominio">Dominio da acquistare:</label>
+                <input type="text" id="dominio" name="dominio" required>
+                <label for="durata">Durata (anni):</label>
+                <input type="number" id="durata" name="durata" min="1" max="10" required>
+                <input type="submit" value="Acquista">
+            </form>
+        </div>
+
+        <!-- Schermata per il rinnovo del dominio -->
+        <div id="rinnovoDominio" class="tabcontent">
+            <h3>Rinnovo Dominio</h3>
+            <form id="rinnovoForm">
+                <label for="dominioRinnovo">Dominio da rinnovare:</label>
+                <input type="text" id="dominioRinnovo" name="dominioRinnovo" readonly>
+                <label for="durataRinnovo">Durata (anni):</label>
+                <input type="number" id="durataRinnovo" name="durataRinnovo" min="1" required>
+                <input type="submit" value="Rinnova">
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Funzione per aprire il tab corretto
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+
+            // Nascondi tutti i tab
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Rimuovi la classe 'active' da tutti i bottoni dei tab
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Mostra il tab selezionato e aggiungi la classe 'active' al bottone cliccato
+            document.getElementById(tabName).style.display = "block";
+            if (evt != null) {
+                evt.currentTarget.className += " active";
+            }
+
+            // Carica i dati per il tab selezionato
+            const userId = localStorage.getItem('userId');
+            if (tabName === 'domini') {
+                loadDomini(userId);
+            } else if (tabName === 'ordini') {
+                //loadOrdini(userId);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+                document.getElementById('userIdDisplay').textContent = `ID Utente: ${userId}`;
+                openTab(null, 'domini');
+            } else {
+                alert('Errore: ID utente non trovato. Effettua nuovamente l\'accesso.');
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Funzione per caricare i domini registrati
+        async function loadDomini(userId) {
+    try {
+        const response = await fetch(`/api/domains/users/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const domains = await response.json();
+            console.log('Domains:', domains); // Log dei dati ricevuti
+            const domainsTableBody = document.getElementById('dominiTableBody');
+            domainsTableBody.innerHTML = ''; // Clear any existing content
+            domains.forEach(domain => {
+                // Assicurati che i campi siano presenti e validi
+                const nome = domain.nome || 'N/A';
+                const dataRegistrazione = domain.dataRegistrazione ? new Date(domain.dataRegistrazione).toLocaleDateString() : 'N/A';
+                const dataScadenza = domain.dataScadenza ? new Date(domain.dataScadenza).toLocaleDateString() : 'N/A';
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${nome}</td>
+                    <td>${dataRegistrazione}</td>
+                    <td>${dataScadenza}</td>
+                    <td><button onclick="renewDomain('${nome}')">Rinnova</button></td>
+                `;
+                domainsTableBody.appendChild(row);
+            });
+        } else {
+            const errorData = await response.json();
+            console.error('Error response:', errorData); // Log del messaggio di errore
+            alert(`Errore: ${errorData.message}`);
+        }
+    } catch (error) {
+        console.error('Error fetching domains:', error); // Log dell'errore di connessione
+        alert('Errore di connessione al server.');
+    }
+}
+
+
+
+        // Funzione per acquistare un nuovo dominio
+        async function purchaseDominio(event) {
+            event.preventDefault(); // Previeni il comportamento predefinito del form
+            const dominio = document.getElementById('dominio').value;
+            const durata = document.getElementById('durata').value;
+            const userId = localStorage.getItem('userId');
+
+            // Controlla se il dominio esiste già
+            try {
+                const checkResponse = await fetch(`/api/domains/${dominio}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (checkResponse.ok) {
+                    const existingDomain = await checkResponse.json();
+
+                    if (existingDomain) {
+                        // Il dominio esiste, mostra i dettagli del proprietario
+                        alert(`Dominio già esistente!
+                            Nome proprietario: ${existingDomain.owner.nome}
+                            Cognome proprietario: ${existingDomain.owner.cognome}
+                            Email proprietario: ${existingDomain.owner.email}
+                            Data di scadenza: ${new Date(existingDomain.expiryDate).toLocaleDateString()}`);
+                    } else {
+                        // Il dominio non esiste, procedi con l'acquisto
+                        proceedWithPurchase(dominio, durata, userId);
+                    }
+                } else {
+                    alert(`Errore nel controllo del dominio: ${checkResponse.statusText}`);
+                }
+            } catch (error) {
+                console.error('Errore nel controllo del dominio:', error);
+                alert('Errore di connessione al server.');
+            }
+        }   
+
+        // Funzione per procedere con l'acquisto del dominio
+        async function proceedWithPurchase(dominio, durata, userId) {
+            try {
+                const response = await fetch(`/api/users/${userId}/purchase`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ dominio, durata })
+                });
+
+                if (response.ok) {
+                    alert('Dominio acquistato con successo!');
+                    loadDomini(userId); // Aggiorna la lista dei domini
+                } else {
+                    const errorData = await response.json();
+                    alert(`Errore: ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Errore durante l\'acquisto del dominio:', error);
+                alert('Errore di connessione al server.');
+            }
+        }
+
+        // Funzione per rinnovare un dominio
+        async function renewDomain(domainName) {
+            const userId = localStorage.getItem('userId');
+
+            try {
+                const response = await fetch(`/api/users/${userId}/domains/${domainName}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const domain = await response.json();
+                    const expiryDate = new Date(domain.expiryDate);
+                    const today = new Date();
+            
+                    // Calcola gli anni rimanenti fino a 10 anni dalla data di scadenza corrente
+                    const yearsToExpiry = 10 - (expiryDate.getFullYear() - today.getFullYear());
+                    const maxYearsForRenewal = Math.min(yearsToExpiry, 10);
+            
+                    // Imposta il valore massimo per il rinnovo
+                    const durataRinnovoInput = document.getElementById('durataRinnovo');
+                    durataRinnovoInput.max = maxYearsForRenewal;
+                    durataRinnovoInput.value = maxYearsForRenewal; // Imposta il valore predefinito al massimo
+
+                    // Aggiorna l'interfaccia utente
+                    document.getElementById('dominioRinnovo').value = domainName;
+                    openTab(null, 'rinnovoDominio');
+                } else {
+                    alert('Errore nel recupero dei dettagli del dominio.');
+                }
+            } catch (error) {
+                console.error('Errore durante il recupero dei dettagli del dominio:', error);
+                alert('Errore di connessione al server.');
+            }
+        }
+        
+
+
+        // Funzione per caricare gli ordini effettuati
+        async function loadOrdini(userId) {
+            try {
+                const response = await fetch(`/api/orders/${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const orders = await response.json();
+                    const ordersTableBody = document.getElementById('ordiniTableBody');
+                    ordersTableBody.innerHTML = ''; // Clear any existing content
+                    orders.forEach(order => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${order.dominio}</td>
+                            <td>${new Date(order.dataOrdine).toLocaleDateString()}</td>
+                            <td>${order.oggetto}</td>
+                            <td>${order.quotaPagata}</td>
+                        `;
+                        ordersTableBody.appendChild(row);
+                    });
+                } else {
+                    const errorData = await response.json();
+                    alert(`Errore: ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+                alert('Errore di connessione al server.');
+            }
+        }
+
+        // Aggiungi il listener per il form di acquisto dominio
+        document.getElementById('purchaseForm').addEventListener('submit', purchaseDominio);
+
+        // Aggiungi il listener per il form di rinnovo dominio
+        document.getElementById('rinnovoForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Previeni il comportamento predefinito del form
+            const dominio = document.getElementById('dominioRinnovo').value;
+            const durata = document.getElementById('durataRinnovo').value;
+            const userId = localStorage.getItem('userId');
+
+            // Invia la richiesta di rinnovo
+            const response = await fetch(`/api/users/${userId}/renew`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ dominio, durata })
+            });
+
+            if (response.ok) {
+                alert('Dominio rinnovato con successo!');
+                loadDomini(userId); // Aggiorna la lista dei domini
+                openTab(null, 'domini'); // Torna alla tabella dei domini
+            } else {
+                const errorData = await response.json();
+                alert(`Errore: ${errorData.message}`);
+            }
+        });
+
+        // Imposta il tab predefinito
+        document.addEventListener('DOMContentLoaded', function() {
+            openTab(null, 'domini');
+        });
+    </script>
+</body>
+</html>
