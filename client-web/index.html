@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registrazione e Accesso - RicorsivaMente Domains</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Link al file JavaScript esterno -->
+  <script src="metodiIndex.js" defer></script>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Benvenuto a RicorsivaMente Domains</h2>
+
+    <div class="tabs">
+      <button class="tablink active" onclick="openTab(event, 'login')">
+        Accedi
+      </button>
+      <button class="tablink" onclick="openTab(event, 'register')">
+        Registrati
+      </button>
+      <button class="tablink" onclick="openTab(event, 'registeredDomains')">
+        Domini
+      </button>
+    </div>
+
+    <div id="login" class="tabcontent" style="display: block">
+      <h3>Accedi</h3>
+      <form id="loginForm">
+        <label for="loginUserId">ID Utente:</label>
+        <input type="text" id="loginUserId" name="userId" required />
+        <input type="submit" value="Accedi" />
+      </form>
+    </div>
+
+    <div id="register" class="tabcontent">
+      <h3>Registrati</h3>
+      <form id="registrationForm">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required />
+        <label for="cognome">Cognome:</label>
+        <input type="text" id="cognome" name="cognome" required />
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+        <input type="submit" value="Registrati" />
+      </form>
+    </div>
+
+    <div id="registeredDomains" class="tabcontent">
+      <h3>Domini Registrati</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Dominio</th>
+              <th>Data di Registrazione</th>
+              <th>Data di Scadenza</th>
+            </tr>
+          </thead>
+          <tbody id="registeredDomainsTableBody">
+            <!-- Qui verranno inseriti dinamicamente i domini registrati -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

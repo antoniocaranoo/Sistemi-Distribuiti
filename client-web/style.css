@@ -1,0 +1,173 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Container */
+.container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 500px;
+    /* Regola la larghezza come preferisci */
+    max-width: 90%;
+    text-align: center;
+}
+
+/* Header */
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.tablink {
+    background-color: #e7e7e7;
+    border: none;
+    padding: 15px 20px;
+    /* Aumenta il padding top/bottom per separare i pulsanti */
+    cursor: pointer;
+    width: 30%;
+    /* Riduci o aumenta se necessario */
+    border-radius: 8px;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.tablink.active {
+    background-color: #5cb85c;
+    color: white;
+}
+
+.tablink:hover {
+    background-color: #ccc;
+    color: black;
+}
+
+/* Tab Content */
+.tabcontent {
+    display: none;
+}
+
+.tabcontent h3 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.tabcontent form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.tabcontent label {
+    color: #333;
+    font-size: 18px;
+    align-self: flex-start;
+}
+
+.tabcontent input[type="text"],
+.tabcontent input[type="email"],
+.tabcontent input[type="number"] {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.tabcontent input[type="submit"] {
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+    align-self: flex-end;
+    width: 150px;
+    transition: background-color 0.3s ease;
+}
+
+.tabcontent input[type="submit"]:hover {
+    background-color: #4cae4c;
+}
+
+/* Table */
+.table-container {
+    max-height: 400px;
+    /* Regola l'altezza massima come preferisci */
+    overflow-y: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th,
+td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+td button {
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+td button:hover {
+    background-color: #4cae4c;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .tablink {
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 12px 15px;
+        /* Aumenta o riduci il padding se necessario */
+    }
+
+    .tabcontent form {
+        width: 100%;
+    }
+
+    .tabcontent input[type="submit"] {
+        width: 100%;
+    }
+}
