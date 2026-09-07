@@ -1,230 +1,256 @@
-# Progetto Sistemi Distribuiti 2023-2024 - API REST
+# Project - REST API
 
-Documentazione delle API REST del progetto 2023/2024, fornite dal server web. Ogni risorsa (dominio, ordine, utente) fornita dal server ha un path dedicato.
+Documentation for the REST APIs provided by the Web server. Each resource (`domain`, `order`, `user`) exposed by the server has a dedicated path.
 
 ## `/domains`
 
 ### GET
 
-**Descrizione**: Recupera tutti i domini dal database. Questo metodo invia una richiesta al database per ottenere la lista di tutti i domini registrati e restituisce la lista in formato JSON.
+**Description**: Retrieves all domains from the database. This method sends a request to the database to obtain the list of all registered domains and returns the list in JSON format.
 
-**Parametri**: nessuno.
+**Parameters**: none.
 
-**Header**: nessuno.
+**Headers**: none.
 
-**Body richiesta**: nulla, body non previsto.
+**Request Body**: none.
 
-**Risposta**: In caso di successo, la risposta contiene una lista di domini in formato JSON.
+**Response**: If successful, the response contains a list of domains in JSON format.
 
-**Codici di stato restituiti**:
-* 200 OK : La richiesta è stata completata con successo. Restituisce la lista dei domini in formato JSON.
-* 404 Not Found: Nessun dominio trovato nel database.
-* 500 Internal Server Error: Si è verificato un errore durante la comunicazione con il database o durante il parsing del JSON.
+**Returned Status Codes**:
+- `200 OK`: The request was completed successfully. Returns the list of domains in JSON format.
+- `404 Not Found`: No domains were found in the database.
+- `500 Internal Server Error`: An error occurred while communicating with the database or parsing the JSON.
 
-## `/domains/{id} `
+---
 
-### GET
-
-**Descrizione**: Recupera un dominio specifico in base al suo ID. Questo metodo invia una richiesta al database per ottenere le informazioni su un dominio specifico identificato dal suo ID e restituisce i dettagli del dominio in formato JSON.
-
-**Parametri**: `id`: ID dell'utente (tipo int).
-
-**Header**: nessuno.
-
-**Body richiesta**: nulla, body non previsto.
-
-**Risposta**: In caso di successo, la risposta contiene i dettagli del dominio richiesto in formato JSON.
-
-**Codici di stato restituiti**:
-* 200 OK: La richiesta è stata completata con successo. Restituisce i dettagli del dominio in fromato JSON.
-* 404 Not Found: Il dominio specificato non è stato trovato nel database.
-* 500 Internal Server Error: Si è verificato un errore durante la comunicazione con il database o durante il parsing del JSON.
-
-## `/domains/{nome}/{tld}`
+## `/domains/{id}`
 
 ### GET
 
-**Descrizione**: Recupera un dominio specifico in base al nome e al TLD (Top-Level Domain). Questo metodo invia una richiesta al database per ottenere le informazioni su un dominio specifico e restituisce i dettagli del dominio in formato JSON.
+**Description**: Retrieves a specific domain by its ID. This method sends a request to the database to obtain information about the domain identified by the specified ID and returns its details in JSON format.
 
-**Parametri**: `nome`: Nome del dominio (tipo String).
-`tld`: TLD del dominio (tipo String).
+**Parameters**: `id`: domain ID (`int`).
 
-**Header**: nessuno.
+**Headers**: none.
 
-**Body richiesta**: nulla, body non previsto.
+**Request Body**: none.
 
-**Risposta**: In caso di successo, la risposta contiene i dettagli del dominio richiesto in formato JSON.
+**Response**: If successful, the response contains the details of the requested domain in JSON format.
 
-**Codici di stato restituiti**:
-* 200 OK: La richiesta è stata completata con successo. Restituisce i dettagli del dominio in formato JSON.
-* 404 Not Found: Il dominio specificato non è stato trovato nel database.
-* 409 Conflict: Il dominio è già in fase di registrazione.
-* 500 Internal Server Error: Si è verificato un errore durante la comunicazione con il database o durante il parsing del JSON.
+**Returned Status Codes**:
+- `200 OK`: The request was completed successfully. Returns the domain details in JSON format.
+- `404 Not Found`: The specified domain was not found in the database.
+- `500 Internal Server Error`: An error occurred while communicating with the database or parsing the JSON.
+
+---
+
+## `/domains/{name}/{tld}`
+
+### GET
+
+**Description**: Retrieves a specific domain by its name and TLD (Top-Level Domain). This method sends a request to the database to obtain information about the specified domain and returns its details in JSON format.
+
+**Parameters**:
+- `name`: domain name (`String`).
+- `tld`: domain TLD (`String`).
+
+**Headers**: none.
+
+**Request Body**: none.
+
+**Response**: If successful, the response contains the details of the requested domain in JSON format.
+
+**Returned Status Codes**:
+- `200 OK`: The request was completed successfully. Returns the domain details in JSON format.
+- `404 Not Found`: The specified domain was not found in the database.
+- `409 Conflict`: The domain is already being registered.
+- `500 Internal Server Error`: An error occurred while communicating with the database or parsing the JSON.
+
+---
 
 ## `/domains/users/{id}`
 
 ### GET
 
-**Descrizione**: Recupera tutti i domini associati a un utente specifico. Questo metodo invia una richiesta al database per ottenere la lista di domini registrati da un utente specifico identificato dal suo ID.
+**Description**: Retrieves all domains associated with a specific user. This method sends a request to the database to obtain the list of domains registered by the user identified by the specified ID.
 
-**Parametri**: `id`: ID dell'utente (tipo int).
+**Parameters**: `id`: user ID (`int`).
 
-**Header**: nessuno.
+**Headers**: none.
 
-**Body richiesta**: nulla, body non previsto.
+**Request Body**: none.
 
-**Risposta**: In caso di successo, la risposta contiene una lista di domini associati all'utente specificato in formato JSON.
+**Response**: If successful, the response contains a list of domains associated with the specified user in JSON format.
 
-**Codici di stato restituiti**:
-* 200 OK : La richiesta è stata completata con successo. Restituisce la lista dei domini dell'utente.
-* 404 Not Found: Nessun dominio trovato per l'utente specificato.
-* 500 Internal Server Error: Si è verificato un errore durante la comunicazione con il database o durante il parsing del JSON.
+**Returned Status Codes**:
+- `200 OK`: The request was completed successfully. Returns the list of domains associated with the user.
+- `404 Not Found`: No domains were found for the specified user.
+- `500 Internal Server Error`: An error occurred while communicating with the database or parsing the JSON.
 
-## `/domains `
+---
+
+## `/domains`
 
 ### POST
 
-**Descrizione**: Aggiunge un nuovo dominio al database. Questo metodo riceve i dettagli di un dominio in formato JSON, li converte in una stringa JSON, invia la stringa al database per l'inserimento, e restituisce l'ID del dominio aggiunto.
+**Description**: Adds a new domain to the database. This method receives the domain details in JSON format, converts them into a JSON string, sends the string to the database for insertion, and returns the ID of the added domain.
 
-**Parametri**: `dominio`: Oggetto `Dominio` contenente i dettagli del dominio da aggiungere.
+**Parameters**: `dominio`: `Dominio` object containing the details of the domain to be added.
 
-**Header**: nessuno.
+**Headers**: none.
 
-**Body richiesta**: Il corpo della richiesta deve contenere un oggetto Dominio in formato JSON.
+**Request Body**: The request body must contain a `Dominio` object in JSON format.
 
-**Risposta**: In caso di successo, la risorsa creata è indicata nell'header location.
+**Response**: If successful, the created resource is specified in the `Location` header.
 
-**Codici di stato restituiti**:
-* 200 OK: La richiesta è stata completata con successo. Restituisce l'ID del dominio aggiunto in formato JSON.
-* 500 Internal Server Error: Si è verificato un errore durante la comunicazione con il database o un errore interno del server.
+**Returned Status Codes**:
+- `200 OK`: The request was completed successfully. Returns the ID of the added domain in JSON format.
+- `500 Internal Server Error`: An error occurred while communicating with the database or an internal server error occurred.
+
+---
 
 ## `/domains`
 
 ### PUT
 
-**Descrizione**: Rinnova un dominio esistente nel database. Questo metodo riceve i dettagli di un dominio in formato JSON, li converte in una stringa JSON, invia la stringa al database per il rinnovo del dominio e restituisce l'ID del dominio rinnovato.
+**Description**: Renews an existing domain in the database. This method receives the domain details in JSON format, converts them into a JSON string, sends the string to the database to renew the domain, and returns the ID of the renewed domain.
 
-**Parametri**: `dominio`: Oggetto `Dominio` contenente i dettagli del dominio da rinnovare.
+**Parameters**: `dominio`: `Dominio` object containing the details of the domain to be renewed.
 
-**Header**: nessuno.
+**Headers**: none.
 
-**Body richiesta**: Il corpo della richiesta deve contenere un oggetto `Dominio` in formato JSON.
+**Request Body**: The request body must contain a `Dominio` object in JSON format.
 
-**Risposta**: In caso di successo, la risposta contiene l'ID del dominio rinnovato.
+**Response**: If successful, the response contains the ID of the renewed domain.
 
-**Codici di stato restituiti**:
-* 200 OK: La richiesta è stata completata con successo. Restituisce l'ID del dominio rinnovato.
-* 500 Internal Server Error: Si è verificato un errore durante la comunicazione con il database o un errore interno del server.
+**Returned Status Codes**:
+- `200 OK`: The request was completed successfully. Returns the ID of the renewed domain.
+- `500 Internal Server Error`: An error occurred while communicating with the database or an internal server error occurred.
 
-## `/users `
+---
 
-### GET
+# Users
 
-**Descrizione**: Recupera tutti gli utenti dal database. Questo metodo invia una richiesta al database per ottenere la lista di tutti gli utenti registrati e restituisce la lista in formato JSON.
-
-**Parametri**: nessuno.
-
-**Header**: nessuno.
-
-**Body richiesta**: nulla, body non previsto.
-
-**Risposta**: In caso di successo, la risposta contiene una lista di utenti in formato JSON.
-
-**Codici di stato restituiti**:
-* 200 OK: La richiesta è stata completata con successo. Restituisce la lista degli utenti in formato JSON.
-* 404 Not Found: Nessun utente trovato nel database.
-* 500 Internal Server Error: Si è verificato un errore durante la comunicazione con il database o durante il parsing del JSON.
-
-## `/users/{id} `
+## `/users`
 
 ### GET
 
-**Descrizione**: Recupera un utente specifico in base al suo ID. Questo metodo invia una richiesta al database per ottenere le informazioni su un utente specifico e restituisce i dettagli dell'utente in formato JSON.
+**Description**: Retrieves all users from the database. This method sends a request to the database to obtain the list of all registered users and returns the list in JSON format.
 
-**Parametri**: `id`: ID dell'utente (tipo int).
+**Parameters**: none.
 
-**Header**: nessuno.
+**Headers**: none.
 
-**Body richiesta**: nulla, body non previsto.
+**Request Body**: none.
 
-**Risposta**: In caso di successo, la risposta contiene i dettagli dell'utente richiesto in formato JSON.
+**Response**: If successful, the response contains a list of users in JSON format.
 
-**Codici di stato restituiti**:
-* 200 OK: La richiesta è stata completata con successo. Restituisce i dettagli dell'utente in formato JSON.
-* 404 Not Found: L'utente specificato non è stato trovato nel database.
-* 500 Internal Server Error: Si è verificato un errore durante la comunicazione con il database o durante il parsing del JSON.
+**Returned Status Codes**:
+- `200 OK`: The request was completed successfully. Returns the list of users in JSON format.
+- `404 Not Found`: No users were found in the database.
+- `500 Internal Server Error`: An error occurred while communicating with the database or parsing the JSON.
+
+---
+
+## `/users/{id}`
+
+### GET
+
+**Description**: Retrieves a specific user by their ID. This method sends a request to the database to obtain information about the specified user and returns the user's details in JSON format.
+
+**Parameters**: `id`: user ID (`int`).
+
+**Headers**: none.
+
+**Request Body**: none.
+
+**Response**: If successful, the response contains the details of the requested user in JSON format.
+
+**Returned Status Codes**:
+- `200 OK`: The request was completed successfully. Returns the user details in JSON format.
+- `404 Not Found`: The specified user was not found in the database.
+- `500 Internal Server Error`: An error occurred while communicating with the database or parsing the JSON.
+
+---
 
 ## `/users`
 
 ### POST
 
-**Descrizione**: Aggiunge un nuovo utente al database. Questo metodo riceve i dettagli di un utente in formato JSON, li converte in una stringa JSON, invia la stringa al database per l'inserimento, e restituisce una risposta che conferma l'aggiunta dell'utente.
+**Description**: Adds a new user to the database. This method receives the user details in JSON format, converts them into a JSON string, sends the string to the database for insertion, and returns a response confirming that the user was added.
 
-**Parametri**: `utente`: Oggetto `Utente` contenente i dettagli dell'utente da aggiungere.
+**Parameters**: `utente`: `Utente` object containing the details of the user to be added.
 
-**Header**: nessuno.
+**Headers**: none.
 
-**Body richiesta**: Il corpo della richiesta deve contenere un oggetto `Utente` in formato JSON.
+**Request Body**: The request body must contain an `Utente` object in JSON format.
 
-**Risposta**: In caso di successo, la risorsa creata è indicata nell'header location.
+**Response**: If successful, the created resource is specified in the `Location` header.
 
-**Codici di stato restituiti**:
-* 200 OK: La richiesta è stata completata con successo. Restituisce una conferma dell'aggiunta dell'utente.
-* 500 Internal Server Error: Si è verificato un errore durante la comunicazione con il database o un errore interno del server.
+**Returned Status Codes**:
+- `200 OK`: The request was completed successfully. Returns confirmation that the user was added.
+- `500 Internal Server Error`: An error occurred while communicating with the database or an internal server error occurred.
 
+---
+
+# Orders
 
 ## `/orders`
 
 ### GET
 
-**Descrizione**: Recupera tutti gli ordini dal database. Questo metodo invia una richiesta al database per ottenere la lista di tutti gli ordini registrati e restituisce la lista in formato JSON.
+**Description**: Retrieves all orders from the database. This method sends a request to the database to obtain the list of all registered orders and returns the list in JSON format.
 
-**Parametri**: nessuno.
+**Parameters**: none.
 
-**Header**: nessuno.
+**Headers**: none.
 
-**Body richiesta**: nulla, body non previsto.
+**Request Body**: none.
 
-**Risposta**: In caso di successo, la risposta contiene una lista di ordini in formato JSON.
+**Response**: If successful, the response contains a list of orders in JSON format.
 
-**Codici di stato restituiti**: 
-* 200 OK: La richiesta è stata completata con successo. Restituisce la lista degli ordini in formato JSON.
-* 404 Not Found: Nessun ordine trovato nel database.
-* 500 Internal Server Error: Si è verificato un errore durante la comunicazione con il database o durante il parsing del JSON.
+**Returned Status Codes**:
+- `200 OK`: The request was completed successfully. Returns the list of orders in JSON format.
+- `404 Not Found`: No orders were found in the database.
+- `500 Internal Server Error`: An error occurred while communicating with the database or parsing the JSON.
 
-## `/orders/{id} `
+---
+
+## `/orders/{id}`
 
 ### GET
 
-**Descrizione**: Recupera tutti gli ordini di un utente specifico in base al suo ID. Questo metodo invia una richiesta al database per ottenere la lista degli ordini dell'utente specificato e restituisce gli ordini in formato JSON.
+**Description**: Retrieves all orders associated with a specific user based on their ID. This method sends a request to the database to obtain the list of orders associated with the specified user and returns them in JSON format.
 
-**Parametri**: `id`: ID dell'utente (tipo int).
+**Parameters**: `id`: user ID (`int`).
 
-**Header**: nessuno.
+**Headers**: none.
 
-**Body richiesta**: nulla, body non previsto.
+**Request Body**: none.
 
-**Risposta**: In caso di successo, la risposta contiene una lista di ordini dell'utente specificato in formato JSON.
+**Response**: If successful, the response contains a list of orders associated with the specified user in JSON format.
 
-**Codici di stato restituiti**:
-* 200 OK: La richiesta è stata completata con successo. Restituisce la lista degli ordini dell'utente in formato JSON.
-* 404 Not Found: Nessun ordine trovato per l'utente specificato.
-* 500 Internal Server Error: Si è verificato un errore durante la comunicazione con il database o durante il parsing del JSON.
+**Returned Status Codes**:
+- `200 OK`: The request was completed successfully. Returns the list of orders associated with the user in JSON format.
+- `404 Not Found`: No orders were found for the specified user.
+- `500 Internal Server Error`: An error occurred while communicating with the database or parsing the JSON.
 
-## `/orders `
+---
+
+## `/orders`
 
 ### POST
 
-**Descrizione**: Aggiunge un nuovo ordine al database. Questo metodo riceve i dettagli di un ordine in formato JSON, li converte in una stringa JSON, invia la stringa al database per l'inserimento, e restituisce l'ID del dominio associato all'ordine aggiunto.
+**Description**: Adds a new order to the database. This method receives the order details in JSON format, converts them into a JSON string, sends the string to the database for insertion, and returns the ID of the domain associated with the added order.
 
-**Parametri**: `ordine`: Oggetto `Ordine` contenente i dettagli dell'ordine da aggiungere.
+**Parameters**: `ordine`: `Ordine` object containing the details of the order to be added.
 
-**Header**: nessuno.
+**Headers**: none.
 
-**Body richiesta**: Il corpo della richiesta deve contenere un oggetto `Ordine` in formato JSON.
+**Request Body**: The request body must contain an `Ordine` object in JSON format.
 
-**Risposta**: In caso di successo, la risorsa creata è indicata nell'header location .
+**Response**: If successful, the created resource is specified in the `Location` header.
 
-**Codici di stato restituiti**:
-* 200 OK: La richiesta è stata completata con successo. Restituisce l'ID del dominio associato all'ordine aggiunto (in formato JSON).
-* 500 Internal Server Error: Si è verificato un errore durante la comunicazione con il database o un errore interno del server.
+**Returned Status Codes**:
+- `200 OK`: The request was completed successfully. Returns the ID of the domain associated with the added order in JSON format.
+- `500 Internal Server Error`: An error occurred while communicating with the database or an internal server error occurred.
