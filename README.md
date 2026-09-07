@@ -1,61 +1,67 @@
-# Progetto Sistemi Distribuiti 2023-2024
+# Project
 
-il sito RicorsivaMente Domains permette agli utenti di acquistare e rinnovare i domini internet disponibili
+The **RicorsivaMente Domains** website allows users to purchase and renew available Internet domains.
 
-## Componenti del gruppo
+## Compilation and Execution
 
-* Davide Baiardi 894430 <d.baiardi1@campus.unimib.it>
-* Antonio Carano 902447 <a.carano1@campus.unimib.it>
-* Camilla Cantaluppi 894557 <c.cantaluppi6@campus.unimib.it>
+Both the Web server and the database are Java applications managed with Maven. Inside their respective folders, the `pom.xml` file contains the Maven configuration for each project. The use of the laboratory virtual machine is assumed; therefore, Java 21 is specified in the `pom.xml`.
 
-## Compilazione ed esecuzione
+The Web server and the database are Java projects that use Maven to manage dependencies, compilation, and execution.
 
-Sia il server Web sia il database sono applicazioni Java gestire con Maven. All'interno delle rispettive cartelle si può trovare il file `pom.xml` in cui è presenta la configurazione di Maven per il progetto. Si presuppone l'utilizzo della macchina virtuale di laboratorio, per cui nel `pom.xml` è specificato l'uso di Java 21.
+### Web Client
 
-Il server Web e il database sono dei progetti Java che utilizano Maven per gestire le dipendenze, la compilazione e l'esecuzione.
+To start the Web client, it is necessary to use the **Live Preview** extension in Visual Studio Code, as shown during the laboratory sessions. This extension exposes a local server containing the files located in the `client-web` folder.
 
-### Client Web
+The recommended alternative is to access `localhost:8080` using Google Chrome, which will open the `index.html` page.
 
-Per avviare il client Web è necessario utilizzare l'estensione "Live Preview" su Visual Studio Code, come mostrato durante il laboratorio. Tale estensione espone un server locale con i file contenuti nella cartella `client-web`.
+**Warning:** CORS must be configured in Google Chrome as shown during the laboratory sessions.
 
-L'alternativa consigliata è quella di accedere a 'localhost:8080' dal browser Google Chrome, verrà aperta la pagina index.html
+The `client-web` consists of two HTML files:
 
-**Attenzione**: è necessario configurare CORS in Google Chrome come mostrato nel laboratorio.
+- **index**: handles user login and registration and displays the domains that have already been registered. The corresponding CSS files for styling and JavaScript methods are linked to this page.
+- **dashboard**: handles domain purchases and renewals and displays the domains and orders associated with the currently logged-in user. The corresponding CSS files for styling and JavaScript methods are linked to this page.
 
-il client-web consiste in due file html:
-* index: gestisce l'accesso e la registrazione degli utenti e mostra i domini già registrati (sono collegati i relativi file css per lo stile e i metodi JavaScript)
-* dashboard: gestisce l'acquisto, il rinnovo e mostra i domini e gli ordini effettuati dall' utente con cui si è fatto l'accesso (sono collegati i relativi file css per lo stile e i metodi JavaScript)
+### Web Server
 
+The Web server uses Jetty and Jersey. It can be started by running:
 
-### Server Web
+    mvn jetty:run
 
-Il server Web utilizza Jetty e Jersey. Si può avviare eseguendo `mvn jetty:run` all'interno della cartella `server-web`. Espone le API REST all'indirizzo `localhost` alla porta `8080`.
+inside the `server-web` folder.
 
-il server-web è formato dai seguent file:
-* Utente: rappresenta un modello di dati per un utente con attributi di base come ID, nome, cognome e email
-* Ordine: rappresenta un modello di dati per gestire le informazioni relative a un ordine
-* Dominio: rappresenta un modello di dati per un dominio internet, includendo informazioni come l'ID, nome, TLD (Top-Level Domain), date di registrazione e scadenza, stato, e il proprietario del dominio.
-* DominiResource: gestisce le operazioni CRUD per la risorsa "domains" attraverso un'interfaccia RESTful usando JAX-RS
-* OrdiniResource: gestisce le operazioni CRUD per la risorsa "orders" attraverso un'interfaccia RESTful usando JAX-RS
-* UtentiResource: gestisce le operazioni CRUD per la risorsa "users" attraverso un'interfaccia RESTful usando JAX-RS
-* JsonException: implementa la gestione delle eccezioni per la deserializzazione JSON in un'API RESTful utilizzando JAX-RS (Java API for RESTful Web Services)
-* JsonParsingException: è un gestore di eccezioni personalizzato per un'API RESTful utilizzando JAX-RS. Essa mappa le eccezioni di tipo ProcessingException, specificatamente per problemi di deserializzazione JSON, a risposte HTTP con uno stato 400 (Bad Request). Questo permette di fornire risposte più informative ai client quando si verificano errori di elaborazione JSON.
+It exposes the REST APIs on `localhost` at port `8080`.
 
+The `server-web` consists of the following files:
+
+- **Utente**: represents the data model for a user, with basic attributes such as ID, first name, last name, and email.
+- **Ordine**: represents the data model used to manage information related to an order.
+- **Dominio**: represents the data model for an Internet domain, including information such as ID, name, TLD (Top-Level Domain), registration and expiration dates, status, and domain owner.
+- **DominiResource**: manages CRUD operations for the `domains` resource through a RESTful interface using JAX-RS.
+- **OrdiniResource**: manages CRUD operations for the `orders` resource through a RESTful interface using JAX-RS.
+- **UtentiResource**: manages CRUD operations for the `users` resource through a RESTful interface using JAX-RS.
+- **JsonException**: implements exception handling for JSON deserialization in a RESTful API using JAX-RS (Java API for RESTful Web Services).
+- **JsonParsingException**: is a custom exception handler for a RESTful API using JAX-RS. It maps `ProcessingException` exceptions, specifically those related to JSON deserialization issues, to HTTP responses with status `400 Bad Request`. This makes it possible to provide more informative responses to clients when JSON processing errors occur.
 
 ### Database
 
-Il database è una semplice applicazione Java. Si possono utilizzare i seguenti comandi Maven:
+The database is a simple Java application.
 
-* `mvn clean`: per ripulire la cartella dai file temporanei,
-* `mvn compile`: per compilare l'applicazione,
-* `mvn exec:java`: per avviare l'applicazione (presuppone che la classe principale sia `Main.java`). Si pone in ascolto all'indirizzo `localhost` alla porta `3030`.
+The following Maven commands can be used:
 
-il database è formato da tre file json che contengono rispettivamente tutte le istanze dei:
-* utenti
-* domini
-* ordini
+- `mvn clean`: cleans the project folder by removing temporary files.
+- `mvn compile`: compiles the application.
+- `mvn exec:java`: starts the application, assuming that the main class is `Main.java`.
 
-e da classi che gestiscono la logica del database:
-* Main: è la classe principale che avvia un server di database e gestisce le connessioni dei client
-* Handler: gestisce le connessioni dei client a un server database e implementa l'interfaccia Runnable, consentendo la gestione delle richieste dei client in thread separati. Ogni istanza della classe è responsabile di una singola connessione del client
-* Database: offre una gestione centralizzata dei dati per utenti, domini e ordini, con metodi per leggere, aggiungere e aggiornare i dati nel formato JSON. Utilizza il pattern Singleton per garantire una singola istanza condivisa, sincronizzando l'accesso ai metodi di modifica per evitare problemi di concorrenza
+The database application listens on `localhost` at port `3030`.
+
+The database consists of three JSON files containing all instances of:
+
+- users;
+- domains;
+- orders.
+
+It also includes classes that manage the database logic:
+
+- **Main**: the main class that starts the database server and manages client connections.
+- **Handler**: manages client connections to the database server and implements the `Runnable` interface, allowing client requests to be handled in separate threads. Each instance of the class is responsible for a single client connection.
+- **Database**: provides centralized management of users, domains, and orders, with methods for reading, adding, and updating data in JSON format. It uses the Singleton pattern to ensure that only one shared instance exists and synchronizes access to modification methods to prevent concurrency issues.
