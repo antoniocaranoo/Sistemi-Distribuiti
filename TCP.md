@@ -1,89 +1,104 @@
-## Protocollo di comunicazione tra database e server Web
+## Communication Protocol Between the Database and Web Server
 
-Il protocollo di comunicazione tra database e server Web deve essere costruito considerando le richieste del sistema. Si suggerisce di implementare un insieme limitato di comandi e di trasmettere dati in forma testuale.
+The communication protocol between the database and the Web server is designed according to the system requirements. It uses a limited set of commands and transmits data in textual format.
 
-### Comandi Implementati
+### Implemented Commands
 
-I seguenti comandi TCP sono utilizzati per la comunicazione tra il server Web e il database:
+The following TCP commands are used for communication between the Web server and the database.
 
 #### DominiResource
 
-1. **Recupera tutti i domini dal database**
-   - **Comando**: `GET/ID/all/DOMAIN\n`
-   - **Metodo**: `getAllDomains()`
+1. **Retrieve all domains from the database**
+   - **Command**: `GET/ID/all/DOMAIN\n`
+   - **Method**: `getAllDomains()`
 
-2. **Recupera tutti i domini associati a un utente specifico**
-   - **Comando**: `GET/user/{id}/DOMAIN\n`
-   - **Metodo**: `getUsersDomains(@PathParam("id") int id)`
+2. **Retrieve all domains associated with a specific user**
+   - **Command**: `GET/user/{id}/DOMAIN\n`
+   - **Method**: `getUsersDomains(@PathParam("id") int id)`
 
-3. **Recupera un dominio specifico in base al nome e al TLD**
-   - **Comando**: `GET/NOME/TLD/{nome}/{tld}/DOMAIN\n`
-   - **Metodo**: `getDomainByNomeTLD(@PathParam("nome") String nome, @PathParam("tld") String tld)`
+3. **Retrieve a specific domain by name and TLD**
+   - **Command**: `GET/NOME/TLD/{nome}/{tld}/DOMAIN\n`
+   - **Method**: `getDomainByNomeTLD(@PathParam("nome") String nome, @PathParam("tld") String tld)`
 
-4. **Recupera un dominio specifico in base al suo ID**
-   - **Comando**: `GET/ID/{id}/DOMAIN\n`
-   - **Metodo**: `getDomainById(@PathParam("id") int id)`
+4. **Retrieve a specific domain by its ID**
+   - **Command**: `GET/ID/{id}/DOMAIN\n`
+   - **Method**: `getDomainById(@PathParam("id") int id)`
 
-5. **Aggiunge un nuovo dominio al database**
-   - **Comando**: `POST/{jsonString}/DOMAIN\n`
-   - **Metodo**: `addDomain(Dominio dominio)`
+5. **Add a new domain to the database**
+   - **Command**: `POST/{jsonString}/DOMAIN\n`
+   - **Method**: `addDomain(Dominio dominio)`
 
-6. **Rinnova un dominio esistente**
-   - **Comando**: `PUT/domain/{jsonString}/DOMAIN\n`
-   - **Metodo**: `rinnovaDominio(Dominio dominio)`
+6. **Renew an existing domain**
+   - **Command**: `PUT/domain/{jsonString}/DOMAIN\n`
+   - **Method**: `rinnovaDominio(Dominio dominio)`
 
 #### OrdineResource
 
-1. **Recupera tutti gli ordini**
-   - **Comando**: `GET/ID/all/ORDERS\n`
-   - **Metodo**: `getOrders()`
+1. **Retrieve all orders**
+   - **Command**: `GET/ID/all/ORDERS\n`
+   - **Method**: `getOrders()`
 
-2. **Recupera gli ordini di un utente specifico**
-   - **Comando**: `GET/id/{id}/ORDERS\n`
-   - **Metodo**: `getOrderUser(@PathParam("id") int id)`
+2. **Retrieve the orders associated with a specific user**
+   - **Command**: `GET/id/{id}/ORDERS\n`
+   - **Method**: `getOrderUser(@PathParam("id") int id)`
 
-3. **Aggiunge un nuovo ordine**
-   - **Comando**: `POST/{jsonString}/ORDERS\n`
-   - **Metodo**: `addOrders(Ordine ordine)`
+3. **Add a new order**
+   - **Command**: `POST/{jsonString}/ORDERS\n`
+   - **Method**: `addOrders(Ordine ordine)`
 
 #### UtentiResource
 
-1. **Recupera tutti gli utenti**
-   - **Comando**: `GET/ID/all/USER\n`
-   - **Metodo**: `getAllUsers()`
+1. **Retrieve all users**
+   - **Command**: `GET/ID/all/USER\n`
+   - **Method**: `getAllUsers()`
 
-2. **Recupera un utente specifico in base al suo ID**
-   - **Comando**: `GET/ID/{id}/USER\n`
-   - **Metodo**: `getUserById(@PathParam("id") int id)`
+2. **Retrieve a specific user by their ID**
+   - **Command**: `GET/ID/{id}/USER\n`
+   - **Method**: `getUserById(@PathParam("id") int id)`
 
-3. **Aggiunge un nuovo utente**
-   - **Comando**: `POST/{jsonString}/USER\n`
-   - **Metodo**: `addUser(Utente utente)`
+3. **Add a new user**
+   - **Command**: `POST/{jsonString}/USER\n`
+   - **Method**: `addUser(Utente utente)`
 
-### Descrizione del Protocollo
+### Protocol Description
 
-Il protocollo utilizza comandi testuali semplici inviati tramite TCP. Ogni comando è strutturato in un formato specifico che include il metodo HTTP simulato, i parametri necessari e l'oggetto target. Le risposte dal database sono anch'esse in formato testuale e terminano con la stringa "END" per indicare la fine della trasmissione dei dati.
+The protocol uses simple textual commands sent over TCP. Each command follows a specific format containing the simulated HTTP method, the required parameters, and the target object.
 
-### Implementazione del Protocollo
+Responses from the database are also transmitted in textual format and terminate with the string `END`, which indicates the end of the data transmission.
 
-L'implementazione del protocollo è realizzata tramite le seguenti classi Java che stabiliscono una connessione TCP con il database, inviano comandi e ricevono risposte:
+### Protocol Implementation
+
+The protocol is implemented through the following Java classes, which establish a TCP connection with the database, send commands, and receive responses:
 
 - `DominiResource`
 - `OrdineResource`
 - `UtentiResource`
 
-Le comunicazioni sono gestite principalmente attraverso le classi `Socket`, `DataOutputStream` e `BufferedReader` per inviare e ricevere messaggi.
+Communication is mainly handled using the following Java classes:
 
-### Esempio di Comunicazione
+- `Socket`
+- `DataOutputStream`
+- `BufferedReader`
 
-Esempio di invio di un comando al database:
+These classes are used to establish the connection and send and receive messages between the Web server and the database.
 
-```java
-try (Socket socket = new Socket(DB_HOST, DB_PORT);
-        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-        BufferedReader buff = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+### Communication Example
 
-    out.writeBytes("GET/ID/all/DOMAIN\n");
-    System.out.println("SERVER'S SENDING: GET/ID/all/DOMAIN\n");
-    String response = readFromSocket(buff);
-}
+The following example shows how a command is sent from the Web server to the database:
+
+    try (Socket socket = new Socket(DB_HOST, DB_PORT);
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+            BufferedReader buff = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+
+        out.writeBytes("GET/ID/all/DOMAIN\n");
+        System.out.println("SERVER'S SENDING: GET/ID/all/DOMAIN\n");
+        String response = readFromSocket(buff);
+    }
+
+In this example, the Web server:
+
+1. establishes a TCP connection with the database using `Socket`;
+2. creates a `DataOutputStream` to send data;
+3. creates a `BufferedReader` to receive the database response;
+4. sends the `GET/ID/all/DOMAIN\n` command;
+5. reads the response returned by the database through `readFromSocket()`.
